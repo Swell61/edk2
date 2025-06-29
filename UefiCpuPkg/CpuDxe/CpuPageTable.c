@@ -849,6 +849,7 @@ ConvertMemoryPageAttributes (
 
       Status = SplitPage (PageEntry, PageAttribute, SplitAttribute, AllocatePagesFunc);
       if (RETURN_ERROR (Status)) {
+        Status = RETURN_UNSUPPORTED;
         goto Done;
       }
 
