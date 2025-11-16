@@ -50,7 +50,6 @@ Ubuntu 24.04
  Toolchain                    CONFIG            DEBUG         RELEASE       NOOPT
 ============================= ================= ============= ============= ==============
 ArmVirtPkg_Ubuntu_GCC_        | AARCH64         |avAArch64du| |avAArch64ru| |avAArch64nu|
-|                             | ARM             |avArmdu|     |avArmru|     |avArmnu|
 EmulatorPkg_Ubuntu_GCC_       | IA32            **N/A**       **N/A**       **N/A**
 |                             | X64             |em64du|      |em64ru|      |em64nu|
 |                             | IA32 FULL       **N/A**       **N/A**       **N/A**
@@ -84,9 +83,6 @@ licenses:
 -  `CryptoPkg\Library\BaseCryptLib\SysCall\inet_pton.c <CryptoPkg\Library\BaseCryptLib\SysCall\inet_pton.c>`__
 -  `CryptoPkg\Library\Include\crypto\dso_conf.h <https://github.com/openssl/openssl/blob/e2e09d9fba1187f8d6aafaa34d4172f56f1ffb72/LICENSE>`__
 -  `CryptoPkg\Library\Include\openssl\opensslconf.h <https://github.com/openssl/openssl/blob/e2e09d9fba1187f8d6aafaa34d4172f56f1ffb72/LICENSE>`__
--  `EmbeddedPkg/Library/FdtLib <EmbeddedPkg/Library/FdtLib/fdt.c>`__.  (EDK II uses BSD License)
--  `EmbeddedPkg/Include/fdt.h <EmbeddedPkg/Include/fdt.h>`__.  (EDK II uses BSD Licence)
--  `EmbeddedPkg/Include/libfdt.h <EmbeddedPkg/Include/libfdt.h>`__.  (EDK II uses BSD License)
 -  `MdeModulePkg/Library/LzmaCustomDecompressLib <MdeModulePkg/Library/LzmaCustomDecompressLib/LZMA-SDK-README.txt>`__
 -  `OvmfPkg <OvmfPkg/License.txt>`__
 

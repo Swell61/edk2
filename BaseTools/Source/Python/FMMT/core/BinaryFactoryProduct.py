@@ -2,6 +2,7 @@
 # This file is used to implement of the various bianry parser.
 #
 # Copyright (c) 2021-, Intel Corporation. All rights reserved.<BR>
+# Copyright (C) 2025 Advanced Micro Devices, Inc. All rights reserved.<BR>
 # SPDX-License-Identifier: BSD-2-Clause-Patent
 ##
 import copy
@@ -129,7 +130,6 @@ class SectionProduct(BinaryProduct):
             Section_Info.Data = Whole_Data[Rel_Offset+Section_Info.HeaderLength: Rel_Offset+Section_Info.Size]
             Section_Info.DOffset = Section_Offset + Section_Info.HeaderLength + Rel_Whole_Offset
             Section_Info.HOffset = Section_Offset + Rel_Whole_Offset
-            Section_Info.ROffset = Rel_Offset
             if Section_Info.Header.Type == 0:
                 break
             # The final Section in parent Section does not need to add padding, else must be 4-bytes align with parent Section start offset
@@ -137,9 +137,6 @@ class SectionProduct(BinaryProduct):
             if (Rel_Offset+Section_Info.HeaderLength+len(Section_Info.Data) != Data_Size):
                 Pad_Size = GetPadSize(Section_Info.Size, SECTION_COMMON_ALIGNMENT)
                 Section_Info.PadData = Pad_Size * b'\x00'
-            if Section_Info.Header.Type == 0x02:
-                Section_Info.DOffset = Section_Offset + Section_Info.ExtHeader.DataOffset + Rel_Whole_Offset
-                Section_Info.Data = Whole_Data[Rel_Offset+Section_Info.ExtHeader.DataOffset: Rel_Offset+Section_Info.Size]
             if Section_Info.Header.Type == 0x14:
                 ParTree.Data.Version = Section_Info.ExtHeader.GetVersionString()
             if Section_Info.Header.Type == 0x15:
@@ -173,7 +170,6 @@ class FfsProduct(BinaryProduct):
             Section_Info.Data = Whole_Data[Rel_Offset+Section_Info.HeaderLength: Rel_Offset+Section_Info.Size]
             Section_Info.DOffset = Section_Offset + Section_Info.HeaderLength + Rel_Whole_Offset
             Section_Info.HOffset = Section_Offset + Rel_Whole_Offset
-            Section_Info.ROffset = Rel_Offset
             if Section_Info.Header.Type == 0:
                 break
             # The final Section in Ffs does not need to add padding, else must be 4-bytes align with Ffs start offset
@@ -181,9 +177,6 @@ class FfsProduct(BinaryProduct):
             if (Rel_Offset+Section_Info.HeaderLength+len(Section_Info.Data) != Data_Size):
                 Pad_Size = GetPadSize(Section_Info.Size, SECTION_COMMON_ALIGNMENT)
                 Section_Info.PadData = Pad_Size * b'\x00'
-            if Section_Info.Header.Type == 0x02:
-                Section_Info.DOffset = Section_Offset + Section_Info.ExtHeader.DataOffset + Rel_Whole_Offset
-                Section_Info.Data = Whole_Data[Rel_Offset+Section_Info.ExtHeader.DataOffset: Rel_Offset+Section_Info.Size]
             # If Section is Version or UI type, it saves the version and UI info of its parent Ffs.
             if Section_Info.Header.Type == 0x14:
                 ParTree.Data.Version = Section_Info.ExtHeader.GetVersionString()
@@ -226,7 +219,6 @@ class FvProduct(BinaryProduct):
                 Ffs_Tree = BIOSTREE(Ffs_Info.Name)
                 Ffs_Info.HOffset = Ffs_Offset + Rel_Whole_Offset
                 Ffs_Info.DOffset = Ffs_Offset + Ffs_Info.Header.HeaderLength + Rel_Whole_Offset
-                Ffs_Info.ROffset = Rel_Offset
                 if Ffs_Info.Name == PADVECTOR:
                     Ffs_Tree.type = FFS_PAD
                     Ffs_Info.Data = Whole_Data[Rel_Offset+Ffs_Info.Header.HeaderLength: Rel_Offset+Ffs_Info.Size]
@@ -361,15 +353,6 @@ class FdProduct(BinaryProduct):
                 Fd_Struct.remove(Fd_Struct[i-tmp_index])
                 tmp_index += 1
         return Fd_Struct
-
-class ElfSectionProduct(BinaryProduct):
-    ## Decompress the compressed section.
-    def ParserData(self, Section_Tree, whole_Data: bytes, Rel_Whole_Offset: int=0) -> None:
-        pass
-    def ParserSectionData(self, Section_Tree, whole_Data: bytes, Rel_Whole_Offset: int=0) -> None:
-        pass
-    def ParserProgramData(self, Section_Tree, whole_Data: bytes, Rel_Whole_Offset: int=0) -> None:
-        pass
 
 class ElfProduct(BinaryProduct):
 

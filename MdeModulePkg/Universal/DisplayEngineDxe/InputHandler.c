@@ -85,6 +85,7 @@ ReadString (
   DimensionsWidth  = gStatementDimensions.RightColumn - gStatementDimensions.LeftColumn;
   DimensionsHeight = gStatementDimensions.BottomRow - gStatementDimensions.TopRow;
 
+  Index         = 0;
   NullCharacter = CHAR_NULL;
   ScreenSize    = GetStringWidth (Prompt) / sizeof (CHAR16);
   Space[0]      = L' ';
@@ -229,8 +230,8 @@ ReadString (
 
       case CHAR_BACKSPACE:
         if ((StringPtr[0] != CHAR_NULL) && (CurrentCursor != 0)) {
-          for (Index = 0; Index < CurrentCursor - 1; Index++) {
-            TempString[Index] = StringPtr[Index];
+          if (CurrentCursor > 1) {
+            CopyMem (TempString, StringPtr, (CurrentCursor - 1) * sizeof (CHAR16));
           }
 
           Count = GetStringWidth (StringPtr) / 2 - 1;
@@ -261,9 +262,7 @@ ReadString (
           KeyPad[1] = CHAR_NULL;
           Count     = GetStringWidth (StringPtr) / 2 - 1;
           if (CurrentCursor < Count) {
-            for (Index = 0; Index < CurrentCursor; Index++) {
-              TempString[Index] = StringPtr[Index];
-            }
+            CopyMem (TempString, StringPtr, CurrentCursor * sizeof (CHAR16));
 
             TempString[Index] = CHAR_NULL;
             StrCatS (TempString, MaxLen, KeyPad);
